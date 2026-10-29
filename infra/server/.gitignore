@@ -1,0 +1,5 @@
+.env
+*.key
+*.pub
+*.sqlite3*
+backups/

@@ -1,0 +1,38 @@
+name: Lunar OSS server integration
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, development/lunar-remote]
+    paths: [infra/server/**, dev/**, libs/hbb_common, Cargo.lock, .github/workflows/lunar-server.yml]
+  pull_request:
+    paths: [infra/server/**, dev/**, libs/hbb_common, Cargo.lock, .github/workflows/lunar-server.yml]
+
+permissions:
+  contents: read
+
+jobs:
+  codec:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          submodules: recursive
+      - uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9
+        with:
+          toolchain: 1.75.0
+      - name: Run upstream codec unit tests with locked dependency versions
+        run: python3 dev/test-codec.py
+
+  protocol:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          submodules: recursive
+      - name: Build development tools with TLS verification
+        run: docker build --secret id=proxy_ca,src=/etc/ssl/certs/ca-certificates.crt -t lunar-remote-dev:bookworm -f dev/Dockerfile dev
+      - name: Validate signaling, key enforcement and bidirectional relay
+        run: bash infra/server/smoke.sh

@@ -1,0 +1,55 @@
+# RustDesk Server OSS; no Pro API, licensing server or management console.
+x-server: &server
+  image: rustdesk/rustdesk-server:1.1.16@sha256:8ecdab65deb7c84652a626380e31d11a8f1fbafd97916d57f95c20628f943c00
+  restart: unless-stopped
+  working_dir: /data
+  volumes:
+    - server-data:/data
+  read_only: true
+  cap_drop:
+    - ALL
+  security_opt:
+    - no-new-privileges:true
+  logging:
+    driver: json-file
+    options:
+      max-size: 10m
+      max-file: "3"
+
+services:
+  identity-ready:
+    image: busybox:1.37.0@sha256:a7dbc319b1438115a207e11930dc4bb3e643dcb3ec0bdd694bb36cd8fad289ec
+    depends_on:
+      hbbs:
+        condition: service_started
+    # The official server image has no shell. This short-lived helper only
+    # checks file presence; it never reads or prints the private identity.
+    command: [sh, -ec, 'i=0; until test -s /data/id_ed25519 && test -s /data/id_ed25519.pub; do i=$$((i+1)); test "$$i" -lt 30; sleep 1; done']
+    volumes:
+      - server-data:/data:ro
+    network_mode: none
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+
+  hbbs:
+    <<: *server
+    # '_' requires clients to provide this server's generated public key.
+    command: [hbbs, -r, "${LUNAR_RELAY_HOST:?Set LUNAR_RELAY_HOST to the reachable relay hostname and port}", -k, _]
+    ports:
+      - "${LUNAR_BIND_ADDRESS:-127.0.0.1}:21115:21115/tcp"
+      - "${LUNAR_BIND_ADDRESS:-127.0.0.1}:21116:21116/tcp"
+      - "${LUNAR_BIND_ADDRESS:-127.0.0.1}:21116:21116/udp"
+
+  hbbr:
+    <<: *server
+    depends_on:
+      identity-ready:
+        condition: service_completed_successfully
+    # Reuse the identity created by hbbs rather than generating a second key.
+    command: [hbbr, -k, _]
+    ports:
+      - "${LUNAR_BIND_ADDRESS:-127.0.0.1}:21117:21117/tcp"
+
+volumes:
+  server-data:
