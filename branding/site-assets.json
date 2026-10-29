@@ -1,0 +1,50 @@
+{
+  "site": "https://lunarhouse.com.br/",
+  "source_html_sha256": "d88eca79de07b3cd8f8234ce7d3f674820e53b8d69d480d1354f23714e1639b5",
+  "status": "download_blocked_by_runtime_proxy",
+  "assets": [
+    {
+      "role": "stylesheet",
+      "url": "https://lunarhouse.com.br/assets/index-Dnm6iH6E.css",
+      "evidence": "original HTML stylesheet reference",
+      "downloaded": false
+    },
+    {
+      "role": "application_bundle",
+      "url": "https://lunarhouse.com.br/assets/index-CwaV5c-e.js",
+      "evidence": "original HTML module reference",
+      "downloaded": false
+    },
+    {
+      "role": "white_wordmark",
+      "url": "https://lunarhouse.com.br/assets/lunarcompleto-branco-D5O5pA7d.png",
+      "evidence": "candidate URL inferred from saved local image filename",
+      "downloaded": false
+    },
+    {
+      "role": "favicon",
+      "url": "https://lunarhouse.com.br/favicon.png",
+      "evidence": "absolute URL in supplied HTML",
+      "downloaded": false
+    },
+    {
+      "role": "social_image",
+      "url": "https://lunarhouse.com.br/assets/lunar-site.png",
+      "evidence": "og:image in supplied HTML",
+      "downloaded": false
+    },
+    {
+      "role": "site_reference_image",
+      "url": "https://lunarhouse.com.br/assets/retaguarda-tablet-CbSLThWD.jpeg",
+      "evidence": "candidate URL inferred from saved local image filename",
+      "downloaded": false
+    }
+  ],
+  "excluded": [
+    "Digisac embedded.js",
+    "Digisac embedded.css",
+    "chat iframe"
+  ],
+  "palette_verified": false,
+  "typography_verified": false
+}
