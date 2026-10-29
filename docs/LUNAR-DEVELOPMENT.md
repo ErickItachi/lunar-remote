@@ -9,7 +9,7 @@
 - Branch de trabalho: `development/lunar-remote`.
 - Licença original preservada em `LICENCE`; manter atribuições e disponibilizar o código modificado conforme AGPL-3.0.
 
-Esta importação ainda é o RustDesk original. Não constitui uma distribuição Lunar Remote personalizada ou validada. Os workflows importados são os de upstream e precisam de revisão antes de execução/publicação; não publicar releases automaticamente nesta etapa.
+O motor e a interface desktop ainda são os originais do RustDesk. Não constituem uma distribuição Lunar Remote personalizada ou validada. A infraestrutura e o ambiente de desenvolvimento Lunar estão em `infra/server` e `dev`. Os workflows nativos importados precisam de adaptação; publicação noturna e por tags foi desativada nesta etapa. O workflow `lunar-server.yml` executa somente verificações de codec e servidor.
 
 ## Arquitetura e plano de adaptação
 
@@ -33,7 +33,11 @@ cargo metadata --locked --no-deps --format-version 1
 cargo test --locked -p hbb_common --lib --no-default-features
 ```
 
-Resultado: metadata do workspace validada; testes bloqueados durante resolução de dependências pelo acesso negado a `chromium.googlesource.com` (libwebm). Nenhum teste executado. A instalação apt de bibliotecas nativas também foi bloqueada por ausência de privilégios administrativos. Flutter, CMake, Ninja, Clang e bibliotecas de desenvolvimento ainda precisam ser provisionados.
+Resultado: metadata do workspace validada. A suíte completa de `hbb_common` continua bloqueada durante resolução de dependências pelo acesso negado a `chromium.googlesource.com` (libwebm); ela não chegou a executar testes. A instalação apt na máquina principal foi bloqueada por ausência de privilégios, mas as bibliotecas nativas, Clang, CMake, Ninja e Protobuf foram instalados e verificados no contêiner de desenvolvimento. Flutter, geração da ponte e vcpkg/codecs ainda precisam ser provisionados.
+
+O comando `bash dev/run.sh python3 dev/test-codec.py` executou com sucesso os sete testes originais do codec de rede, usando o arquivo fonte sem modificações e versões fixadas a partir do lockfile. Trata-se de uma suíte delimitada, não da aplicação inteira.
+
+`bash infra/server/smoke.sh` passou os quatro testes reais de protocolo (NAT TCP, registro UDP, rejeição de chave incorreta e relay bidirecional), preservou a chave pública após restart e passou os quatro testes novamente. O teste remove seus recursos temporários e não publica portas. Não comprova uma sessão desktop ou conexão entre redes distintas.
 
 Referência de versões: `.github/workflows/flutter-build.yml` fixa Flutter 3.24.5 para Windows x64, Rust 1.75, Rust 1.81 para macOS e vcpkg `120deac3062162151622ca4860575a33844ba10b`. Não atualizar os lockfiles para contornar dependências. Antes de compilar, conferir requisitos específicos do job e gerar a ponte Flutter/Rust conforme `.github/workflows/bridge.yml`.
 
