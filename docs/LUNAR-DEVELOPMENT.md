@@ -48,6 +48,8 @@ O HTML fornecido identifica título Lunar House, mas contém somente um contêin
 
 O acesso ao site foi negado pelo proxy (CONNECT 403). Obter esses recursos pelo site após liberar o domínio, ou por arquivos fornecidos pelo responsável. Não copiar o widget Digisac para o aplicativo desktop.
 
+O segundo arquivo fornecido, `Lunar House.htm`, contém o DOM renderizado (aproximadamente 100 KB), mas continua referenciando uma pasta externa `Lunar House_files` não incluída no anexo. Ele identifica o logotipo `lunarcompleto-branco-D5O5pA7d.png`, além do CSS `index-Dnm6iH6E.css`. O estilo incorporado pertence às notificações Sonner; suas cores não estabelecem a paleta da marca. Solicitar a pasta de recursos compactada ou aplicar a liberação de rede antes de extrair a identidade visual completa.
+
 ## Critérios ainda não verificados
 
 Nenhum executável, instalador, DMG ou release gerado. Nenhuma conexão remota, captura, controle, instalação, desinstalação, assinatura ou notarização testada. Faltam personalização visual, revisão de workflows, infraestrutura hbbs/hbbr, endereços e chave pública reais e máquinas Windows/macOS para validação. Não declarar o produto nem o ambiente completos antes de resolver os bloqueios e executar as validações correspondentes.
